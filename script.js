@@ -2,6 +2,8 @@ const temp = document.getElementById("temp")
 const date = document.getElementById("date-time")
 const currentLocation = document.getElementById("location")
 const condition = document.getElementById("condition")
+
+
 const rain = document.getElementById("rain")
 const mainIcon = document.getElementById("icon")
 
@@ -79,21 +81,30 @@ getPublicIp();
 
 function getWeatherData(city, unit, hourlyOrWeekly) {
     const apiKey = "JCELDRLJGXLJY6S9AJP4QUP94"
-    fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?elements=datetime%2CdatetimeEpoch%2Ctemp%2Ctempmax%2Ctempmin%2Cprecip%2Cwindspeed%2Cwindgust%2Cfeelslike%2Cfeelslikemax%2Cfeelslikemin%2Cpressure%2Cstations%2Cdegreedays%2Caccdegreedays&include=fcst%2Cobs%2Chistfcst%2Cstats%2Chours&key=${apiKey}&options=preview&contentType=json`)
+    city = 'Essen';
+    fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?include=fcst%2Cobs%2Chistfcst%2Cstats%2Cdays%2Chours%2Ccurrent%2Calerts&key=${apiKey}&options=beta&contentType=json`)
     .then((response)=> response.json())
     .then((data)=>{
         let today = data.currentConditions;
-        if(unit === "c"){
-            temp.innerText = today.temp
-        }else{
+        console.log(data)
+        if(unit === "F"){
             temp.innerText = celciusToFahrenheit(today.temp)
+        }else{
+            temp.innerText = fahrenheitToCelsius(today.temp)
         }
-        currentLocation.innerText = data.resolvedAddress
-        CSSConditionRule.innerText = today.conditions
+        currentLocation.innerText = data.resolvedAddress;
+        condition.innerText = today.conditions;
+        console.log(today)
+        rain.innerText = "Precipation - " + today.precip + "%"
     })
 }
 
-
+// celsius or fahrenheit
+getWeatherData()
 function celciusToFahrenheit(temp){
     return((temp*9)/5 +32).toFixed(1)
+}
+function fahrenheitToCelsius(fahrenheit) {
+  var celsius = (fahrenheit - 32) * 5 / 9;
+  return celsius.toFixed(1);
 }
