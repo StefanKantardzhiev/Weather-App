@@ -107,7 +107,7 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
             sunSet.innerText = "Sunset " + today.sunset.slice(0, 5) + " h";
             visibility.innerText = today.visibility
             airQuality.innerText = today.winddir
-
+            mainIcon.src = getIcon(today.conditions)
             measeureUvIndex(today.uvindex);
             updateHumidity(today.humidity);
             updateVisibility(today.visibility);
@@ -205,4 +205,21 @@ function converTimeTo12(time) {
     min = min < 10 ? "0" + min : min;
     let strTime = hour + ":" + min + " " + ampm;
     return strTime
+}
+
+function getIcon(condition) {
+    if (condition.includes("cloud")) {
+        return "icons/cloud-sun.png"
+    } else if (condition.includes("rain")) {
+        return "icons/rain.png"
+    }
+    else if (condition.includes(clear || sun)) {
+        return "icons/sunny.png"
+    }
+    else if (condition.includes("snow")) {
+        return "icons/snowy.png"
+    }
+    else {
+        return "icons/earth.jpg"
+    }
 }
