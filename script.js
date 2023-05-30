@@ -207,9 +207,9 @@ function converTimeTo12(time) {
 }
 
 function getIcon(condition) {
-    condition = "rain"
+
     if (condition.includes("cloud")) {
-        return "icons/cloud-sun.png"
+        return "icons/cloudy.png"
     } else
         if (condition.includes("rain")) {
             return "icons/rain.png"
@@ -221,7 +221,7 @@ function getIcon(condition) {
             return "icons/snowy.png"
         }
         else {
-            return "icons/earth.jpg"
+            return "icons/umbrella.png"
         }
 }
 
