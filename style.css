@@ -84,17 +84,12 @@ img {
 }
 
 .weather-icon {
-    width: 100%;
-    height: 30px;
     text-align: center;
     margin-top: 20px;
-    margin-bottom: 100px;
 }
 
 .weather-icon #icon {
-    display: block;
-    width: 80%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .temp {
@@ -191,7 +186,7 @@ nav .units button {
     background-color: white;
 }
 
-/* main -> days */ 
+/* main -> days */
 
 .main .cards {
     display: flex;
@@ -214,13 +209,15 @@ nav .units button {
     width: 250px;
     height: 100px;
 }
-.weekend{
+
+.weekend {
     width: 100%;
     display: flex;
     justify-content: space-around;
     margin-top: 50px;
 }
-.weekend .card-saturday{
+
+.weekend .card-saturday {
     border: 2px transparent;
     border-radius: 20px;
     color: black;
@@ -231,14 +228,18 @@ nav .units button {
     width: 250px;
     height: 180px;
 }
-.weekend .card-saturday h2,.weekend .card-sunday h2{
+
+.weekend .card-saturday h2,
+.weekend .card-sunday h2 {
     font-size: 28px;
 }
-.weekend .card-saturday img,.weekend .card-sunday img{
+
+.weekend .card-saturday img,
+.weekend .card-sunday img {
     width: 60px;
 }
 
-.weekend .card-sunday{
+.weekend .card-sunday {
     border: 2px transparent;
     border-radius: 20px;
     color: black;
@@ -269,6 +270,7 @@ nav .units button {
     align-items: center;
     justify-content: center;
 }
+
 /* Highlights */
 
 
@@ -287,25 +289,26 @@ nav .units button {
     text-transform: capitalize;
 }
 
-.highlights .card{
+.highlights .card {
     height: 150px;
     width: 250px;
 }
 
-.highlights .card h4{
+.highlights .card h4 {
     padding: 10px;
-    color:grey;
+    color: grey;
     text-align: start;
 }
-.highlights .card p{
+
+.highlights .card p {
     font-size: 40px;
     font-weight: 700;
-    color:rgba(0, 0, 0, 0.726);
-    
+    color: rgba(0, 0, 0, 0.726);
+
 }
 
-.highlights .card p:last-child{
-    padding:10px;
+.highlights .card p:last-child {
+    padding: 10px;
     text-align: start;
     font-weight: 700;
     font-size: 25px;
@@ -314,7 +317,7 @@ nav .units button {
 
 
 /*footer */
-.foot{
+.foot {
     position: fixed;
     bottom: 0;
     color: grey;

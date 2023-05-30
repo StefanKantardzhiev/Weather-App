@@ -24,7 +24,7 @@ const visibilityStatus = document.getElementById("visibilityStatus")
 
 const airQuality = document.getElementById("airQuality")
 const airQualityStatus = document.getElementById("airQualityStatus")
-
+const monday = document.getElementById("day-Monday")
 
 const search = document.getElementById("query")
 
@@ -76,9 +76,9 @@ function getPublicIp() {
     fetch("https://geolocation-db.com/json/")
         .then((response) => response.json())
         .then((data) => {
-            let currentCity = data.city
-            return currentCity
+            getWeatherData("Essen", currentUnit, hourlyOrWeekly)
         })
+
 }
 
 getPublicIp();
@@ -86,7 +86,6 @@ getPublicIp();
 
 function getWeatherData(city, unit, hourlyOrWeekly) {
     const apiKey = "JCELDRLJGXLJY6S9AJP4QUP94"
-    city = "Essen"
     fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?include=fcst%2Cobs%2Chistfcst%2Cstats%2Cdays%2Chours%2Ccurrent%2Calerts&key=${apiKey}&options=beta&contentType=json`)
         .then((response) => response.json())
         .then((data) => {
@@ -107,7 +106,7 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
             sunSet.innerText = "Sunset " + today.sunset.slice(0, 5) + " h";
             visibility.innerText = today.visibility
             airQuality.innerText = today.winddir
-            mainIcon.src = getIcon(today.conditions)
+            mainIcon.src = getIcon(today.icon)
             measeureUvIndex(today.uvindex);
             updateHumidity(today.humidity);
             updateVisibility(today.visibility);
@@ -150,7 +149,7 @@ function updateHumidity(humidity) {
         humidityStatus.innerText = "Low"
     } else if (humidity <= 60) {
         humidityStatus.innerText = "Moderate"
-    } else if (humidity > 60) {
+    } else {
         humidityStatus.innerText = "High"
     }
 }
@@ -208,18 +207,33 @@ function converTimeTo12(time) {
 }
 
 function getIcon(condition) {
+    condition = "rain"
     if (condition.includes("cloud")) {
         return "icons/cloud-sun.png"
-    } else if (condition.includes("rain")) {
-        return "icons/rain.png"
-    }
-    else if (condition.includes(clear || sun)) {
-        return "icons/sunny.png"
-    }
-    else if (condition.includes("snow")) {
-        return "icons/snowy.png"
-    }
-    else {
-        return "icons/earth.jpg"
-    }
+    } else
+        if (condition.includes("rain")) {
+            return "icons/rain.png"
+        }
+        else if (condition.includes("clear" || "sun")) {
+            return "icons/sunny.png"
+        }
+        else if (condition.includes("snow")) {
+            return "icons/snowy.png"
+        }
+        else {
+            return "icons/earth.jpg"
+        }
 }
+
+// function searchfor() {
+//     const apiKey = "JCELDRLJGXLJY6S9AJP4QUP94"
+
+//     fetch(`https://countriesnow.space/api/v0.1/cities`)
+//         .then((response) => response.json())
+//         .then((data) => {
+
+//             console.log(data)
+//         }
+//         )
+// }
+// searchfor()
