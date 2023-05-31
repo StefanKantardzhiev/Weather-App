@@ -39,7 +39,7 @@ const weatherCards = document.getElementById("cards")
 const hourlyBtn = document.getElementById("hourly")
 const weeklyBtn = document.getElementById("weekly")
 
-let currentCity = '';
+let currentCity = 'Essen';
 let currentUnit = 'c';
 let hourlyOrWeekly = " ";
 
@@ -84,13 +84,19 @@ setInterval(() => {
 
 
 function getPublicIp() {
-    fetch("http://www.geoplugin.net/json.gp")
+    fetch("https://ipapi.co/json/")
         .then((response) => response.json())
         .then((data) => {
-            currentCity = data.geoplugin_city
+            currentCity = data.city
+            console.log(currentCity)
+
             getWeatherData(currentCity, currentUnit, hourlyOrWeekly)
         })
+        .catch((err) => {
+            currentCity = "Essen"
+            getWeatherData(currentCity, currentUnit, hourlyOrWeekly)
 
+        })
 }
 
 getPublicIp();
@@ -134,7 +140,7 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
             updateQuality(today.winddir);
             getHour(today.datetime);
             converTimeTo12(today.datetime);
-        }).catch((err)=> {
+        }).catch((err) => {
             console.log(err)
         });
 }
