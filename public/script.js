@@ -84,11 +84,11 @@ setInterval(() => {
 
 
 function getPublicIp() {
-    fetch("http://www.geoplugin.net/json.gp/")
+    fetch("http://www.geoplugin.net/json.gp")
         .then((response) => response.json())
         .then((data) => {
             currentCity = data.geoplugin_city
-            getWeatherData(data.geoplugin_city, currentUnit, hourlyOrWeekly)
+            getWeatherData(currentCity, currentUnit, hourlyOrWeekly)
         })
 
 }
@@ -100,7 +100,6 @@ getPublicIp();
 
 function getWeatherData(city, unit, hourlyOrWeekly) {
     const apiKey = "JCELDRLJGXLJY6S9AJP4QUP94"
-
     fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?include=fcst%2Cobs%2Chistfcst%2Cstats%2Cdays%2Chours%2Ccurrent%2Calerts&key=${apiKey}&options=beta&contentType=json`)
         .then((response) => response.json())
         .then((data) => {
@@ -129,16 +128,15 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
             } else {
                 updateForecast(data.days, unit, "weekly")
             }
-
             measeureUvIndex(today.uvindex);
             updateHumidity(today.humidity);
             updateVisibility(today.visibility);
             updateQuality(today.winddir);
             getHour(today.datetime);
             converTimeTo12(today.datetime);
-
-
-        })
+        }).catch((err)=> {
+            console.log(err)
+        });
 }
 
 
@@ -310,7 +308,7 @@ function updateForecast(data, unit, type) {
         let dayName = getHour(data[day].datetime);
         if (type === "weekly") {
             dayName = getDayName(data[day].datetime);
-        }else{
+        } else {
             dayName = getHour(data[day].datetime);
         }
         let dayTemp = data[day].temp;
@@ -386,7 +384,7 @@ function changeUnit(unit) {
                 celsiusBtn.classList.remove("active")
                 fahrenheitBtn.classList.add("active")
             }
-            
+
         }
         getWeatherData(currentCity, currentUnit, hourlyOrWeekly)
     }
