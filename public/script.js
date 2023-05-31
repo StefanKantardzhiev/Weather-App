@@ -27,11 +27,16 @@ const airQualityStatus = document.getElementById("airQualityStatus")
 const monday = document.getElementById("day-Monday")
 
 const search = document.getElementById("query")
+const searchForm = document.getElementById("search")
 
+const celsiusBtn = document.getElementById("celcius")
+const fahrenheitBtn = document.getElementById("fahrenheit")
 
+const tempUnit = document.querySelectorAll(".temp-unit")
+const weatherCards = document.getElementById("cards")
 
 let currentCity = '';
-let currentUnit = '';
+let currentUnit = 'c';
 let hourlyOrWeekly = "Week"
 
 
@@ -78,7 +83,7 @@ function getPublicIp() {
     fetch("http://www.geoplugin.net/json.gp/")
         .then((response) => response.json())
         .then((data) => {
-            console.log(data.geoplugin_city)
+            currentCity = data.geoplugin_city
             getWeatherData(data.geoplugin_city, currentUnit, hourlyOrWeekly)
         })
 
@@ -91,19 +96,21 @@ getPublicIp();
 
 function getWeatherData(city, unit, hourlyOrWeekly) {
     const apiKey = "JCELDRLJGXLJY6S9AJP4QUP94"
+    
     fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?include=fcst%2Cobs%2Chistfcst%2Cstats%2Cdays%2Chours%2Ccurrent%2Calerts&key=${apiKey}&options=beta&contentType=json`)
         .then((response) => response.json())
         .then((data) => {
             const today = data.currentConditions;
-
-            if (unit === "F") {
-                temp.innerText = celciusToFahrenheit(today.temp)
-            } else {
+            
+            if (unit === "c") {
                 temp.innerText = fahrenheitToCelsius(today.temp)
+            } else if (unit === "f") {
+                temp.innerText = celciusToFahrenheit(today.temp)
             }
+
             currentLocation.innerText = data.resolvedAddress;
             condition.innerText = today.conditions;
-            
+
             rain.innerText = "Precipation - " + today.precip + "%"
             uvIndex.innerText = today.uvindex
             windSpeed.innerText = today.windspeed + "%"
@@ -113,6 +120,12 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
             visibility.innerText = today.visibility
             airQuality.innerText = today.winddir
             mainIcon.src = getIcon(today.icon)
+            if (hourlyOrWeekly === "hourly") {
+                console.log(unit)
+                updateForecast(data.days[0].hours, unit, "day")
+            } else {
+                updateForecast(data.days, unit, "week")
+            }
             measeureUvIndex(today.uvindex);
             updateHumidity(today.humidity);
             updateVisibility(today.visibility);
@@ -184,7 +197,7 @@ function updateVisibility(visibility) {
 }
 
 function updateQuality(airQuality) {
-    
+
     if (airQuality <= 50) {
         airQualityStatus.innerText = "Good"
     } else if (airQuality <= 100) {
@@ -234,15 +247,127 @@ function getIcon(condition) {
         }
 }
 
-// function searchCity() {
-//     const apiKey = "JCELDRLJGXLJY6S9AJP4QUP94"
 
-//     fetch('../cities.json')
-//         .then((response) => response.json())
-//         .then((data) => {
+function getDayName(date) {
+    let day = new Date(date)
+    let days = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+    ];
+    return days[day.getDay()]
+}
 
-//             console.log(data)
-//         }
-//         )
-// }
-// searchCity()
+function getHour(time) {
+    let hour = time.split(":")[0];
+    let min = time.split(":")[1];
+    if (hour < 12) {
+        hour = hour - 12
+        return `${hour} : ${min} PM`
+    } else {
+        hour = hour - 12
+        return `0${hour} : ${min} A`
+    }
+
+}
+
+function updateForecast(data, unit, type) {
+    weatherCards.innerHTML = '';
+
+    let day = 0;
+    let numCards = 0;
+
+    if (type === 'day') {
+        numCards = 24
+    } else {
+        numCards = 7
+    }
+    for (let i = 0; i < numCards; i++) {
+        let card = document.createElement("div");
+        card.classList.add("card")
+        let dayName = getHour(data[day].datetime);
+        if (type === "week") {
+            dayName = getDayName(data[day].datetime);
+        }
+        let dayTemp = data[day].temp;
+        if (unit === "c") {
+            dayTemp = fahrenheitToCelsius(data[day].temp)
+        }
+        let iconCondition = data[day].icon;
+        let iconSrc = getIcon(iconCondition)
+        let tempUnit = 'c';
+        if (unit === 'f') {
+            tempUnit = 'f'
+        }
+        console.log('test')
+        card.innerHTML = `
+        
+        <h2 class="day-name">${dayName}</h2>
+        <div class="card-icon">
+            <img src="${iconSrc}" alt="" srcset="">
+        </div>
+        <div class="day-temp">
+            <h2 class="temperature">${dayTemp}</h2>
+            <span class="temp-unit">°${tempUnit}</span>
+        </div>
+    `;
+        weatherCards.appendChild(card)
+        day++
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+searchForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+    let location = search.value;
+    if (location) {
+        currentCity = location
+        getWeatherData(currentCity, currentUnit, hourlyOrWeekly)
+    }
+})
+
+celsiusBtn.addEventListener("click", () => {
+    changeUnit("c")
+})
+fahrenheitBtn.addEventListener("click", () => {
+    changeUnit("f")
+})
+
+
+function changeUnit(unit) {
+    if (currentUnit != unit) {
+        currentUnit = unit;
+        {
+            tempUnit.forEach((element) => {
+                element.innerText = `${unit.toUpperCase()}`
+            });
+            if (unit === "c") {
+                celsiusBtn.classList.add("active")
+                fahrenheitBtn.classList.remove("active")
+            } else {
+                celsiusBtn.classList.remove("active")
+                fahrenheitBtn.classList.add("active")
+            }
+            getWeatherData(currentCity, currentUnit, hourlyOrWeekly)
+        }
+    }
+}
