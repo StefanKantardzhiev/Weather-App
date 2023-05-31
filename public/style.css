@@ -68,6 +68,32 @@ img {
     color: darkgrey;
 }
 
+.search ul{
+    margin-top: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+    position: absolute;
+    width: 100%;
+    top:40px;
+    border-radius: 5px ;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px;
+    background-color: whitesmoke;
+}
+.search ul li{
+    padding: 10px 15px;
+    cursor: pointer;
+    text-transform: capitalize;
+}
+
+.search ul li:last-child{
+    border-bottom: none;
+}
+
+.search ul li:hover{
+    color:#44c3fa;
+}
+
 .search input:focus {
     outline: none;
     border: 1px solid var(--primary-clr)
