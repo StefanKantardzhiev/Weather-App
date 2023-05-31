@@ -35,9 +35,13 @@ const fahrenheitBtn = document.getElementById("fahrenheit")
 const tempUnit = document.querySelectorAll(".temp-unit")
 const weatherCards = document.getElementById("cards")
 
+
+const hourlyBtn = document.getElementById("hourly")
+const weeklyBtn = document.getElementById("weekly")
+
 let currentCity = '';
 let currentUnit = 'c';
-let hourlyOrWeekly = "Week"
+let hourlyOrWeekly = " ";
 
 
 // Update Date Time
@@ -96,12 +100,12 @@ getPublicIp();
 
 function getWeatherData(city, unit, hourlyOrWeekly) {
     const apiKey = "JCELDRLJGXLJY6S9AJP4QUP94"
-    
+
     fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?include=fcst%2Cobs%2Chistfcst%2Cstats%2Cdays%2Chours%2Ccurrent%2Calerts&key=${apiKey}&options=beta&contentType=json`)
         .then((response) => response.json())
         .then((data) => {
             const today = data.currentConditions;
-            
+
             if (unit === "c") {
                 temp.innerText = fahrenheitToCelsius(today.temp)
             } else if (unit === "f") {
@@ -121,16 +125,17 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
             airQuality.innerText = today.winddir
             mainIcon.src = getIcon(today.icon)
             if (hourlyOrWeekly === "hourly") {
-                console.log(unit)
-                updateForecast(data.days[0].hours, unit, "day")
+                updateForecast(data.days[0].hours, unit, "hourly")
             } else {
-                updateForecast(data.days, unit, "week")
+                updateForecast(data.days, unit, "weekly")
             }
+
             measeureUvIndex(today.uvindex);
             updateHumidity(today.humidity);
             updateVisibility(today.visibility);
             updateQuality(today.winddir);
-            converTimeTo12(today.datetime)
+            getHour(today.datetime);
+            converTimeTo12(today.datetime);
 
 
         })
@@ -140,7 +145,7 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
 /* Conditions */
 
 // celsius or fahrenheit
-getWeatherData()
+// getWeatherData()
 function celciusToFahrenheit(temp) {
     return ((temp * 9) / 5 + 32).toFixed(1)
 }
@@ -225,6 +230,11 @@ function converTimeTo12(time) {
     return strTime
 }
 
+function getHour(time) {
+    let hour = time.split(":")[0];
+    let min = time.split(":")[1];
+    return `${hour} : ${min} h`
+}
 function getIcon(condition) {
 
     if (condition.includes("cloud")) {
@@ -261,19 +271,27 @@ function getDayName(date) {
     ];
     return days[day.getDay()]
 }
+hourlyBtn.addEventListener("click", () => {
+    changeTimeSpan("hourly")
+});
+weeklyBtn.addEventListener("click", () => {
+    changeTimeSpan("weekly")
+})
 
-function getHour(time) {
-    let hour = time.split(":")[0];
-    let min = time.split(":")[1];
-    if (hour < 12) {
-        hour = hour - 12
-        return `${hour} : ${min} PM`
-    } else {
-        hour = hour - 12
-        return `0${hour} : ${min} A`
+function changeTimeSpan(unit) {
+    if (hourlyOrWeekly != unit) {
+        hourlyOrWeekly = unit;
+        if (unit === "hourly") {
+            hourlyBtn.classList.add('active')
+            weeklyBtn.classList.remove('active')
+        } else {
+            hourlyBtn.classList.remove('active')
+            weeklyBtn.classList.add('active')
+        }
     }
-
+    getWeatherData(currentCity, currentUnit, hourlyOrWeekly)
 }
+
 
 function updateForecast(data, unit, type) {
     weatherCards.innerHTML = '';
@@ -281,7 +299,7 @@ function updateForecast(data, unit, type) {
     let day = 0;
     let numCards = 0;
 
-    if (type === 'day') {
+    if (type === 'hourly') {
         numCards = 24
     } else {
         numCards = 7
@@ -290,8 +308,10 @@ function updateForecast(data, unit, type) {
         let card = document.createElement("div");
         card.classList.add("card")
         let dayName = getHour(data[day].datetime);
-        if (type === "week") {
+        if (type === "weekly") {
             dayName = getDayName(data[day].datetime);
+        }else{
+            dayName = getHour(data[day].datetime);
         }
         let dayTemp = data[day].temp;
         if (unit === "c") {
@@ -303,7 +323,6 @@ function updateForecast(data, unit, type) {
         if (unit === 'f') {
             tempUnit = 'f'
         }
-        console.log('test')
         card.innerHTML = `
         
         <h2 class="day-name">${dayName}</h2>
@@ -367,7 +386,8 @@ function changeUnit(unit) {
                 celsiusBtn.classList.remove("active")
                 fahrenheitBtn.classList.add("active")
             }
-            getWeatherData(currentCity, currentUnit, hourlyOrWeekly)
+            
         }
+        getWeatherData(currentCity, currentUnit, hourlyOrWeekly)
     }
 }
