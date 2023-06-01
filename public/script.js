@@ -197,7 +197,7 @@ function updateVisibility(visibility) {
         visibilityStatus.innerText = "Very Light Mist"
     }
     else if (visibility <= 10.8) {
-        visibilityStatus.innerText = "Clear Air"
+        visibilityStatus.innerText = "Clear"
     } else {
         visibilityStatus.innerText = "Clear"
     }
