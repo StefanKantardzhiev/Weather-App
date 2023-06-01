@@ -88,8 +88,6 @@ function getPublicIp() {
         .then((response) => response.json())
         .then((data) => {
             currentCity = data.city
-            console.log(currentCity)
-
             getWeatherData(currentCity, currentUnit, hourlyOrWeekly)
         })
         .catch((err) => {
@@ -120,15 +118,15 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
             currentLocation.innerText = data.resolvedAddress;
             condition.innerText = today.conditions;
 
-            rain.innerText = "Precipation - " + today.precip + "%"
-            uvIndex.innerText = today.uvindex
-            windSpeed.innerText = today.windspeed + "%"
+            rain.innerText = "Precipitation - " + today.precipprob + "%";
+            uvIndex.innerText = today.uvindex;
+            windSpeed.innerText = today.windspeed + " km/h"
             humidity.innerText = today.humidity + "%";
             sunRise.innerText = (today.sunrise).slice(0, 5) + " h";
             sunSet.innerText = "Sunset " + today.sunset.slice(0, 5) + " h";
-            visibility.innerText = today.visibility
-            airQuality.innerText = today.winddir
-            mainIcon.src = getIcon(today.icon)
+            visibility.innerText = today.visibility;
+            // airQuality.innerText = today.windgust;
+            mainIcon.src = getIcon(today.icon);
             if (hourlyOrWeekly === "hourly") {
                 updateForecast(data.days[0].hours, unit, "hourly")
             } else {
@@ -137,7 +135,7 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
             measeureUvIndex(today.uvindex);
             updateHumidity(today.humidity);
             updateVisibility(today.visibility);
-            updateQuality(today.winddir);
+            // updateQuality(today.winddir);
             getHour(today.datetime);
             converTimeTo12(today.datetime);
         }).catch((err) => {
@@ -209,7 +207,7 @@ function updateQuality(airQuality) {
 
     if (airQuality <= 50) {
         airQualityStatus.innerText = "Good"
-    } else if (airQuality <= 100) {
+    } else if (airQuality <= 200) {
         airQualityStatus.innerText = "Moderate"
     } else if (airQuality > 150) {
         airQualityStatus.innerText = "Unhealthy"
