@@ -74,13 +74,13 @@ function getDateTime() {
         second = "0" + second
     }
     let dayString = days[now.getDay()];
-    return (`${dayString} / ${hour}:${minute}:${second}`)
+    return (`${dayString} / ${hour}:${minute} h`)
 }
 
 date.innerText = getDateTime()
-setInterval(() => {
-    date.innerText = getDateTime()
-}, 1000)
+// setInterval(() => {
+//     date.innerText = getDateTime()
+// }, 1000)
 
 
 function getPublicIp() {
@@ -220,17 +220,17 @@ function updateQuality(airQuality) {
 
 /* Buttons */
 
-function converTimeTo12(time) {
-    let hour = time.split(":")[0];
-    let min = time.split(":")[1];
-    let ampm = hour >= 12 ? "pm" : "am";
-    hour = (hour & 12) * 2;
-    hour = hour ? hour : 12;
-    hour = hour < 10 ? "0" + hour : hour;
-    min = min < 10 ? "0" + min : min;
-    let strTime = hour + ":" + min + " " + ampm;
-    return strTime
-}
+// function converTimeTo12(time) {
+//     let hour = time.split(":")[0];
+//     let min = time.split(":")[1];
+//     let ampm = hour >= 12 ? "pm" : "am";
+//     hour = (hour & 12) * 2;
+//     hour = hour ? hour : 12;
+//     hour = hour < 10 ? "0" + hour : hour;
+//     min = min < 10 ? "0" + min : min;
+//     let strTime = hour + ":" + min + " " + ampm;
+//     return strTime
+// }
 
 function getHour(time) {
     let hour = time.split(":")[0];
