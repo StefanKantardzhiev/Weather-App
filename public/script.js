@@ -149,11 +149,11 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
 // celsius or fahrenheit
 // getWeatherData()
 function celciusToFahrenheit(temp) {
-    return ((temp * 9) / 5 + 32).toFixed(1)
+    return ((temp * 9) / 5 + 32).toFixed(1)+ ` °F`
 }
 function fahrenheitToCelsius(fahrenheit) {
     var celsius = (fahrenheit - 32) * 5 / 9;
-    return celsius.toFixed(1);
+    return celsius.toFixed(1)+ ` °C`;
 }
 
 function measeureUvIndex(uvIndex) {
@@ -333,7 +333,7 @@ function updateForecast(data, unit, type) {
         </div>
         <div class="day-temp">
             <h2 class="temperature">${dayTemp}</h2>
-            <span class="temp-unit">°${tempUnit}</span>
+            <span class="temp-unit"></span>
         </div>
     `;
         weatherCards.appendChild(card)
