@@ -106,7 +106,7 @@ body {
 }
 
 .weather-icon #icon {
-    margin: 0px auto;
+    margin: 10px auto;
     width: 50%;
 }
 
