@@ -149,11 +149,11 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
 // celsius or fahrenheit
 // getWeatherData()
 function celciusToFahrenheit(temp) {
-    return ((temp * 9) / 5 + 32).toFixed(1)
+    return ((temp * 9) / 5 + 32).toFixed(1)+ ` °F`
 }
 function fahrenheitToCelsius(fahrenheit) {
     var celsius = (fahrenheit - 32) * 5 / 9;
-    return celsius.toFixed(1);
+    return celsius.toFixed(1)+ ` °C`;
 }
 
 function measeureUvIndex(uvIndex) {
@@ -240,22 +240,22 @@ function getHour(time) {
 function getIcon(condition) {
 
     if (condition.includes("cloud")) {
-        return "https://i.ibb.co/9cGHp0P/cloudy.png"
+        return "https://i.ibb.co/0f59MxT/icons8-cloudy.gif"
     } else
         if (condition.includes("rain")) {
-            return "https://i.ibb.co/ZBKRkNW/rain.png"
+            return "https://i.ibb.co/HYks7JW/icons8-rain.gif"
         }
         else if (condition.includes("clear" || "sun")) {
-            return "https://i.ibb.co/2S1NSfg/sunny.png"
+            return "https://i.ibb.co/Npy2t6m/icons8-summer.gif"
         }
         else if (condition.includes("snow")) {
-            return "https://i.ibb.co/dD1T937/snowy.png"
+            return "https://i.ibb.co/6RZxm4B/icons8-snow.gif"
         }
         else if (condition.includes("storm")) {
-            return "https://i.ibb.co/WHf8nYq/storm.png"
+            return "https://i.ibb.co/1RFyVYh/icons8-storm.gif"
         }
         else {
-            return "https://i.ibb.co/Ch8DLHJ/umbrella.png"
+            return "https://i.ibb.co/Wksg10D/icons8-barometer.gif"
         }
 }
 
@@ -333,7 +333,7 @@ function updateForecast(data, unit, type) {
         </div>
         <div class="day-temp">
             <h2 class="temperature">${dayTemp}</h2>
-            <span class="temp-unit">°${tempUnit}</span>
+            <span class="temp-unit"></span>
         </div>
     `;
         weatherCards.appendChild(card)
