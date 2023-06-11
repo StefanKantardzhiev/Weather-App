@@ -104,13 +104,13 @@ getPublicIp();
 
 function getWeatherData(city, unit, hourlyOrWeekly) {
     const apiKey = "JCELDRLJGXLJY6S9AJP4QUP94"
-    fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?include=fcst%2Cobs%2Chistfcst%2Cstats%2Cdays%2Chours%2Ccurrent%2Calerts&key=${apiKey}&options=beta&contentType=json`)
+    fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=${apiKey}&contentType=json`)
         .then((response) => response.json())
         .then((data) => {
             const today = data.currentConditions;
 
             if (unit === "c") {
-                temp.innerText = fahrenheitToCelsius(today.temp)
+                temp.innerText = today.temp + ` °C`
             } else if (unit === "f") {
                 temp.innerText = celciusToFahrenheit(today.temp)
             }
@@ -124,7 +124,8 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
             humidity.innerText = today.humidity + "%";
             sunRise.innerText = (today.sunrise).slice(0, 5) + " h";
             sunSet.innerText = "Sunset " + today.sunset.slice(0, 5) + " h";
-            visibility.innerText = today.visibility;
+            visibility.innerText = today.visibility
+            console.log(today);
             // airQuality.innerText = today.windgust;
             mainIcon.src = getIcon(today.icon);
             if (hourlyOrWeekly === "hourly") {
@@ -149,12 +150,15 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
 // celsius or fahrenheit
 // getWeatherData()
 function celciusToFahrenheit(temp) {
-    return ((temp * 9) / 5 + 32).toFixed(1)+ ` °F`
+    return ((temp * 9) / 5 + 32).toFixed(1) + ` °F`
 }
 function fahrenheitToCelsius(fahrenheit) {
-    var celsius = (fahrenheit - 32) * 5 / 9;
-    return celsius.toFixed(1)+ ` °C`;
+    let celsius = (fahrenheit - 32) * 5 / 9;
+    return celsius.toFixed(1) + ` °C`;
 }
+
+
+
 
 function measeureUvIndex(uvIndex) {
     if (uvIndex <= 2) {
@@ -220,17 +224,17 @@ function updateQuality(airQuality) {
 
 /* Buttons */
 
-// function converTimeTo12(time) {
-//     let hour = time.split(":")[0];
-//     let min = time.split(":")[1];
-//     let ampm = hour >= 12 ? "pm" : "am";
-//     hour = (hour & 12) * 2;
-//     hour = hour ? hour : 12;
-//     hour = hour < 10 ? "0" + hour : hour;
-//     min = min < 10 ? "0" + min : min;
-//     let strTime = hour + ":" + min + " " + ampm;
-//     return strTime
-// }
+function converTimeTo12(time) {
+    let hour = time.split(":")[0];
+    let min = time.split(":")[1];
+    let ampm = hour >= 12 ? "pm" : "am";
+    hour = (hour & 12) * 2;
+    hour = hour ? hour : 12;
+    hour = hour < 10 ? "0" + hour : hour;
+    min = min < 10 ? "0" + min : min;
+    let strTime = hour + ":" + min + " " + ampm;
+    return strTime
+}
 
 function getHour(time) {
     let hour = time.split(":")[0];
@@ -316,8 +320,11 @@ function updateForecast(data, unit, type) {
             dayName = getHour(data[day].datetime);
         }
         let dayTemp = data[day].temp;
+
         if (unit === "c") {
-            dayTemp = fahrenheitToCelsius(data[day].temp)
+            dayTemp = data[day].temp + ` °C`
+        } else if (unit === 'f') {
+            dayTemp = celciusToFahrenheit(data[day].temp)
         }
         let iconCondition = data[day].icon;
         let iconSrc = getIcon(iconCondition)
@@ -378,9 +385,6 @@ function changeUnit(unit) {
     if (currentUnit != unit) {
         currentUnit = unit;
         {
-            tempUnit.forEach((element) => {
-                element.innerText = `${unit.toUpperCase()}`
-            });
             if (unit === "c") {
                 celsiusBtn.classList.add("active")
                 fahrenheitBtn.classList.remove("active")
