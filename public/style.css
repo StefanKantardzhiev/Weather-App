@@ -21,7 +21,7 @@ body {
     padding: 10px;
     display: flex;
     justify-content: center;
-    background:url('../../images/background.jpg');
+    background:url('https://i.ibb.co/zV5s9XL/background.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     transition: background-image 0.3s ease-out;
