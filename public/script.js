@@ -125,8 +125,6 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
             sunRise.innerText = (today.sunrise).slice(0, 5) + " h";
             sunSet.innerText = "Sunset " + today.sunset.slice(0, 5) + " h";
             visibility.innerText = today.visibility
-            console.log(today);
-            // airQuality.innerText = today.windgust;
             mainIcon.src = getIcon(today.icon);
             if (hourlyOrWeekly === "hourly") {
                 updateForecast(data.days[0].hours, unit, "hourly")
@@ -140,7 +138,7 @@ function getWeatherData(city, unit, hourlyOrWeekly) {
             getHour(today.datetime);
             converTimeTo12(today.datetime);
         }).catch((err) => {
-            console.log(err)
+            return err
         });
 }
 
@@ -165,7 +163,7 @@ function measeureUvIndex(uvIndex) {
         uvLevel.innerText = "Low"
     } else if (uvIndex <= 5) {
         uvLevel = "Moderate"
-    } else if (uvIndex <= 7) {
+    } else if (uvIndex <= 8) {
         uvLevel.innerText = "High"
     } else if (uvIndex <= 10) {
         uvLevel.innerText = "Very High"
@@ -202,7 +200,7 @@ function updateVisibility(visibility) {
     }
     else if (visibility <= 10.8) {
         visibilityStatus.innerText = "Clear"
-    } else {
+    } else if (visibility > 10.8) {
         visibilityStatus.innerText = "Clear"
     }
 }
@@ -239,24 +237,34 @@ function converTimeTo12(time) {
 function getHour(time) {
     let hour = time.split(":")[0];
     let min = time.split(":")[1];
+
+    if (hour > 17) {
+        getIcon(condition.includes("clear || sun") = () => {
+            return "../../images/clear-night.svg"
+        }
+        )
+    }
+
+
     return `${hour} : ${min} h`
+
 }
 function getIcon(condition) {
 
     if (condition.includes("cloud")) {
-        return "https://i.ibb.co/0f59MxT/icons8-cloudy.gif"
+        return '../../images/cloudy.svg'
     } else
         if (condition.includes("rain")) {
-            return "https://i.ibb.co/HYks7JW/icons8-rain.gif"
+            return "../../images/rain.svg"
         }
         else if (condition.includes("clear" || "sun")) {
-            return "https://i.ibb.co/Npy2t6m/icons8-summer.gif"
+            return "../../images/clear-day.svg"
         }
         else if (condition.includes("snow")) {
-            return "https://i.ibb.co/6RZxm4B/icons8-snow.gif"
+            return "../../images/snow.svg"
         }
         else if (condition.includes("storm")) {
-            return "https://i.ibb.co/1RFyVYh/icons8-storm.gif"
+            return "../../images/thunderstorms-rain.svg"
         }
         else {
             return "https://i.ibb.co/Wksg10D/icons8-barometer.gif"
